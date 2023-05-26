@@ -6,8 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"log"
-	"math/rand"
-	"time"
 )
 
 const (
@@ -30,9 +28,7 @@ func (game *Game) Update() error {
 func (game *Game) Draw(screen *ebiten.Image) {
 
 	// Создается двумерный массив с пикселями
-	if game.pixels == nil {
-		game.pixels = make([]byte, windowWidth*windowHeight*4)
-	}
+	game.pixels = make([]byte, windowWidth*windowHeight*4)
 
 	// Заполняем массив пикселей данными об ареи игры
 	game.world.Draw(game.pixels)
@@ -52,7 +48,7 @@ func (game *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
 
 // Инициализация на старте
 func init() {
-	rand.Seed(time.Now().UnixNano())
+	//rand.Seed(time.Now().UnixNano())
 }
 
 func main() {

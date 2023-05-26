@@ -6,7 +6,6 @@ import (
 
 const (
 	White = 255
-	Black = 0
 )
 
 // World Игровое поле
@@ -35,7 +34,7 @@ func NewWorld(width, height, initialFields int) *World {
 func makeArea(width, height int) [][]bool {
 	area := make([][]bool, width)
 
-	for id, _ := range area {
+	for id := range area {
 		area[id] = make([]bool, height)
 	}
 
@@ -64,11 +63,7 @@ func (world *World) Next() {
 
 			neighbours := world.neighboursCount(idRow, idColumn)
 
-			switch {
-			case neighbours > 3 || neighbours < 2:
-				newArea[idRow][idColumn] = false
-
-			case neighbours == 3 || neighbours == 2 && elem:
+			if neighbours == 3 || neighbours == 2 && elem {
 				newArea[idRow][idColumn] = true
 			}
 		}
@@ -80,13 +75,11 @@ func (world *World) Next() {
 // Draw Транслейт игрового поля в массив пикселей
 func (world *World) Draw(pixels []byte) {
 
-	for idRow, _ := range world.area {
-		for idColumn, _ := range world.area[idRow] {
+	for idRow := range world.area {
+		for idColumn := range world.area[idRow] {
 
 			if world.area[idRow][idColumn] {
 				setPixel(pixels, idColumn*world.width+idRow, White)
-			} else {
-				setPixel(pixels, idColumn*world.width+idRow, Black)
 			}
 		}
 	}
