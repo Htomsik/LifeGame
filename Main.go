@@ -1,8 +1,13 @@
 package main
 
 import (
+	"LifeGame/World"
+	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"log"
+	"math/rand"
+	"time"
 )
 
 const (
@@ -12,44 +17,48 @@ const (
 
 type Game struct {
 	pixels []byte
-	world  *World
+	world  *World.World
 }
 
 // Update Обновление данных на каждой итерации
-func (g *Game) Update() error {
-	g.world.Update()
+func (game *Game) Update() error {
+	game.world.Next()
 	return nil
 }
 
 // Draw Отрисовка данных на каждой итерации
-func (g *Game) Draw(screen *ebiten.Image) {
+func (game *Game) Draw(screen *ebiten.Image) {
 
 	// Создается двумерный массив с пикселями
-	if g.pixels == nil {
-		g.pixels = make([]byte, windowWidth*windowHeight*4)
+	if game.pixels == nil {
+		game.pixels = make([]byte, windowWidth*windowHeight*4)
 	}
 
 	// Заполняем массив пикселей данными об ареи игры
-	g.world.Draw(g.pixels)
+	game.world.Draw(game.pixels)
 
 	// Считывается полученный массив пикселей и выводится на экран
-	screen.WritePixels(g.pixels)
+	screen.WritePixels(game.pixels)
+
+	// Вывод тпс
+	msg := fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS())
+	ebitenutil.DebugPrint(screen, msg)
 }
 
 // Layout инициализирует размеры поля
-func (g *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
+func (game *Game) Layout(_, _ int) (screenWidth, screenHeight int) {
 	return windowWidth, windowHeight
 }
 
 // Инициализация на старте
 func init() {
-
+	rand.Seed(time.Now().UnixNano())
 }
 
 func main() {
 
 	game := &Game{
-		world: NewWorld(windowWidth, windowHeight),
+		world: World.NewWorld(windowWidth, windowHeight, windowWidth*windowHeight/2),
 	}
 
 	ebiten.SetWindowSize(windowWidth*2, windowHeight*2)
