@@ -5,8 +5,13 @@ import (
 	"math/rand"
 )
 
+// RGBA цвета
 const (
 	White = 255
+)
+
+var (
+	Blue = [4]byte{0, 200, 255, 1}
 )
 
 // World Игровое поле
@@ -97,14 +102,24 @@ func (world *World) Draw(pixels []byte) {
 			setPixel(pixels, idColumn*world.width+idRow, White)
 		}
 	}
+
+	for _, coords := range world.SquareCoords {
+		setPixelAll(pixels, coords[1]*world.width+coords[0], Blue)
+	}
 }
 
 // setPixel Установка цвета пикселя
 func setPixel(pixels []byte, id int, color byte) {
-	pixels[4*id] = color
-	pixels[4*id+1] = color
-	pixels[4*id+2] = color
-	pixels[4*id+3] = color
+	for i := 0; i <= 3; i++ {
+		pixels[4*id+i] = color
+	}
+}
+
+// setPixel Установка цвета пикселя
+func setPixelAll(pixels []byte, id int, colors [4]byte) {
+	for i := 0; i <= 3; i++ {
+		pixels[4*id+i] = colors[i]
+	}
 }
 
 // neighboursCount Расчёт количества соседей

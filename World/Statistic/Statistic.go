@@ -3,7 +3,7 @@ package Statistic
 type Statistic struct {
 	Cycle        int
 	SquareCount  int
-	squareCoords [][2]int
+	SquareCoords [][2]int
 }
 
 // Next Обновление статистики
@@ -16,7 +16,7 @@ func (stats *Statistic) Next(area [][]bool) {
 
 // Init	Инициализация статистики
 func (stats *Statistic) Init() {
-	stats.squareCoords = make([][2]int, 0)
+	stats.SquareCoords = make([][2]int, 0)
 }
 
 // detectSquares обнаружение количества
@@ -28,13 +28,13 @@ func (stats *Statistic) detectSquares(area [][]bool) {
 
 			if coords, isDetected := isSquare(area, idRow, idColumn); isDetected {
 				for _, elem := range coords {
-					stats.squareCoords = append(stats.squareCoords, elem)
+					stats.SquareCoords = append(stats.SquareCoords, elem)
 				}
 			}
 		}
 	}
 
-	stats.SquareCount = len(stats.squareCoords) / 4
+	stats.SquareCount = len(stats.SquareCoords) / 4
 }
 
 // isSquare Проверяет входит ли поле в структуру квадрата
