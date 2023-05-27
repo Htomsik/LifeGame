@@ -47,7 +47,7 @@ func (game *Game) Draw(screen *ebiten.Image) {
 	screen.WritePixels(game.pixels)
 
 	// Вывод статистики
-	msg := fmt.Sprintf("TPS: %v\nCycle: %v\nSqare count: %v", ebiten.ActualTPS(), game.world.Cycle, game.world.SquareCount)
+	msg := fmt.Sprintf("TPS: %v\nCycle: %v\nSqare count: %v\nDead Dots count:%v", ebiten.ActualTPS(), game.world.Cycle, game.world.SquareStats.Count, game.world.DotStats.Count)
 
 	ebitenutil.DebugPrint(screen, msg)
 }

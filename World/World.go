@@ -2,6 +2,7 @@ package World
 
 import (
 	"LifeGame/World/Statistic"
+	"LifeGame/World/Statistic/Extensions"
 	"math/rand"
 )
 
@@ -12,6 +13,7 @@ const (
 
 var (
 	Blue = [4]byte{0, 200, 255, 1}
+	Red  = [4]byte{255, 0, 0, 1}
 )
 
 // World Игровое поле
@@ -68,13 +70,12 @@ func (world *World) init(countPixels int) {
 
 // Next Обновление игрового поля
 func (world *World) Next() {
-
 	newArea := makeArea(world.width, world.height)
 
 	for idRow, row := range world.area {
 		for idColumn, elem := range row {
 
-			neighbours := world.neighboursCount(idRow, idColumn)
+			neighbours := Extensions.NeighboursCount(world.area, idRow, idColumn)
 
 			if neighbours == 3 || neighbours == 2 && elem {
 				newArea[idRow][idColumn] = true
@@ -103,8 +104,12 @@ func (world *World) Draw(pixels []byte) {
 		}
 	}
 
-	for _, coords := range world.SquareCoords {
+	for _, coords := range world.SquareStats.Coords {
 		setPixelAll(pixels, coords[1]*world.width+coords[0], Blue)
+	}
+
+	for _, coords := range world.DotStats.Coords {
+		setPixelAll(pixels, coords[1]*world.width+coords[0], Red)
 	}
 }
 
@@ -120,32 +125,4 @@ func setPixelAll(pixels []byte, id int, colors [4]byte) {
 	for i := 0; i <= 3; i++ {
 		pixels[4*id+i] = colors[i]
 	}
-}
-
-// neighboursCount Расчёт количества соседей
-func (world *World) neighboursCount(row, column int) int {
-	var neighbours int
-
-	for idRow := -1; idRow <= 1; idRow++ {
-		for idColumn := -1; idColumn <= 1; idColumn++ {
-
-			idNeighRow, idNeighCol := row+idRow, column+idColumn
-
-			if idNeighRow >= world.width || idNeighRow < 0 {
-				continue
-			}
-			if idNeighCol >= world.height || idNeighCol < 0 {
-				continue
-			}
-			if idRow == 0 && idColumn == 0 {
-				continue
-			}
-
-			if world.area[idNeighRow][idNeighCol] {
-				neighbours++
-			}
-		}
-	}
-
-	return neighbours
 }
