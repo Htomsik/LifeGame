@@ -11,6 +11,11 @@ import (
 const (
 	windowWidth  = 640
 	windowHeight = 480
+	tickDuration = 1
+)
+
+var (
+	tickCount int
 )
 
 type Game struct {
@@ -20,7 +25,12 @@ type Game struct {
 
 // Update Обновление данных на каждой итерации
 func (game *Game) Update() error {
-	game.world.Next()
+	tickCount++
+
+	if tickCount == tickDuration {
+		game.world.Next()
+		tickCount = 0
+	}
 	return nil
 }
 
@@ -36,8 +46,9 @@ func (game *Game) Draw(screen *ebiten.Image) {
 	// Считывается полученный массив пикселей и выводится на экран
 	screen.WritePixels(game.pixels)
 
-	// Вывод тпс
-	msg := fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS())
+	// Вывод статистики
+	msg := fmt.Sprintf("TPS: %v\nCycle: %v\nSqare count: %v", ebiten.ActualTPS(), game.world.Cycle, game.world.SquareCount)
+
 	ebitenutil.DebugPrint(screen, msg)
 }
 
@@ -54,7 +65,7 @@ func init() {
 func main() {
 
 	game := &Game{
-		world: World.NewWorld(windowWidth, windowHeight, windowWidth*windowHeight/2),
+		world: World.NewWorld(windowWidth, windowHeight, windowWidth*windowHeight/2, tickDuration),
 	}
 
 	ebiten.SetWindowSize(windowWidth*2, windowHeight*2)

@@ -1,6 +1,7 @@
 package World
 
 import (
+	"LifeGame/World/Statistic"
 	"math/rand"
 )
 
@@ -10,22 +11,29 @@ const (
 
 // World Игровое поле
 type World struct {
-	area          [][]bool
-	width, height int
+	Statistic.Statistic
+
+	area         [][]bool
+	width        int
+	height       int
+	TickDuration int
 }
 
 // NewWorld Создание нового мира
-func NewWorld(width, height, initialFields int) *World {
+func NewWorld(width, height, initialFields, tickDuration int) *World {
 
 	world := &World{
-		area:   makeArea(width, height),
-		width:  width,
-		height: height,
+		area:         makeArea(width, height),
+		width:        width,
+		height:       height,
+		TickDuration: tickDuration,
 	}
 
 	if initialFields > 0 {
 		world.init(initialFields)
 	}
+
+	world.Statistic.Init()
 
 	return world
 }
@@ -70,6 +78,8 @@ func (world *World) Next() {
 	}
 
 	world.area = newArea
+
+	world.Statistic.Next(world.area)
 }
 
 // Draw Транслейт игрового поля в массив пикселей
@@ -78,12 +88,15 @@ func (world *World) Draw(pixels []byte) {
 	for idRow := range world.area {
 		for idColumn := range world.area[idRow] {
 
-			if world.area[idRow][idColumn] {
-				setPixel(pixels, idColumn*world.width+idRow, White)
+			isColored := world.area[idRow][idColumn]
+
+			if !isColored {
+				continue
 			}
+
+			setPixel(pixels, idColumn*world.width+idRow, White)
 		}
 	}
-
 }
 
 // setPixel Установка цвета пикселя
