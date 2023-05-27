@@ -129,19 +129,19 @@ func (world *World) neighboursCount(row, column int) int {
 	for idRow := -1; idRow <= 1; idRow++ {
 		for idColumn := -1; idColumn <= 1; idColumn++ {
 
-			idNeightRow, idNeightCol := row+idRow, column+idColumn
+			idNeighRow, idNeighCol := row+idRow, column+idColumn
 
-			if idNeightRow >= world.width || idNeightRow < 0 {
+			if idNeighRow >= world.width || idNeighRow < 0 {
 				continue
 			}
-			if idNeightCol >= world.height || idNeightCol < 0 {
+			if idNeighCol >= world.height || idNeighCol < 0 {
 				continue
 			}
 			if idRow == 0 && idColumn == 0 {
 				continue
 			}
 
-			if world.area[idNeightRow][idNeightCol] {
+			if world.area[idNeighRow][idNeighCol] {
 				neighbours++
 			}
 		}
